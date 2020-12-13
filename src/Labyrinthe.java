@@ -14,8 +14,6 @@ public class Labyrinthe{
     //affiche le labyrinthe sur 20 lignes et 40 colonnes
     public static void afficher(int[][] grid){
 
-
-
         for (int i=0;i< grid.length;i++){
             System.out.println();
             for (int j = 0; j< grid[i].length; j++)
@@ -48,24 +46,13 @@ public class Labyrinthe{
         col = debutCol;
     }
 
-    public static boolean tryMove(int[][] lab, int nouveauRow, int nouveauCol) {
-        row += nouveauRow;
-        col += nouveauCol;
-
-        return resoudre(lab);
-    }
-
     //resout le labyrinthe
     public static boolean resoudre(int[][] grille) {
-
 
         //recursif
         //cas de base
         if (row == finRow && col == finCol)
             return true;
-        //check if not deadend
-        if (grille[row][col] == 2 || grille[row][col] == 1)
-            return false;
         //mark as visited
         grille[row][col] = visited;
 
@@ -77,7 +64,10 @@ public class Labyrinthe{
 
             if(resoudre(grille))
                 return true;
-            row += 1;
+            else {
+                grille[row][col] = 2;
+                row += 1;
+            }
         }
         //check en bas
         if (row != grille.length && grille[row + 1][col] == 0){
@@ -86,7 +76,10 @@ public class Labyrinthe{
 
             if(resoudre(grille))
                 return true;
-            row -= 1;
+            else {
+                grille[row][col] = 2;
+                row -= 1;
+            }
         }
         //check a droite
         if (col != grille[0].length && grille[row][col + 1] == 0){
@@ -95,17 +88,26 @@ public class Labyrinthe{
 
             if(resoudre(grille))
                 return true;
-            col -= 1;
+            else {
+                grille[row][col] = 2;
+                col -= 1;
+            }
         }
         //check a gauche
         if (col != 0 && grille[row][col - 1] == 0){
             grille[row][col] = -1;
             col -= 1;
 
-            if(resoudre(grille))
+            if(resoudre(grille)) {
+                grille[row][col] = -1;
                 return true;
-            col += 1;
+            }
+            else {
+                grille[row][col] = 2;
+                col += 1;
+            }
         }
-        return false; // TODO must return true when met the exit
+        grille[row][col] = 2;
+        return false;
     }
 }
