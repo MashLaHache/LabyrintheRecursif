@@ -7,13 +7,13 @@ class Main {
     public static void main(String[] args) {
         int[][] labyrinthe = charger("labyrinthe");
         Labyrinthe.afficher(labyrinthe);
+        Labyrinthe.trouverDebutLabyrinthe(labyrinthe);
         if (Labyrinthe.resoudre(labyrinthe)){
             System.out.println("Chemin trouvé!");
         } else {
             System.out.println("Chemin non trouvé!");
         }
         Labyrinthe.afficher(labyrinthe);
-
     }
 
     /* méthode fournie pour lire une grille dans un fichier*/

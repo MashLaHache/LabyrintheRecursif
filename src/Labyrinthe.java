@@ -2,6 +2,15 @@ import java.util.Arrays;
 
 public class Labyrinthe{
 
+    private static int row;
+    private static int col;
+    private static int debutRow = 0;
+    private static int debutCol;
+    private static int finRow = 19;
+    private static int finCol;
+    private static int visited = 2;
+
+
     //affiche le labyrinthe sur 20 lignes et 40 colonnes
     public static void afficher(int[][] grid){
 
@@ -10,91 +19,93 @@ public class Labyrinthe{
         for (int i=0;i< grid.length;i++){
             System.out.println();
             for (int j = 0; j< grid[i].length; j++)
-                if (grid[i][j] == 0)
+                //0 == chemin vide
+                if (grid[i][j] == 0 || grid[i][j] == 2 )
                     //decider de mettre des carre vide pour une meilleure representation
                     System.out.print("\u2b1c\t");
+                //1 == wall
                 else if (grid[i][j] == 1)
                     System.out.print("\u2588\u2588\t");
+                //-1 == chemin montrant la solution existante, represente par des points
+                else if (grid[i][j] == -1)
+                    System.out.print("\u00b7\u00b7\t");
         }
         System.out.println();
     }
 
-    //resout le labyrinthe
-    public static boolean resoudre(int[][] grille){
-
-
-
-
-
-        /*
-
-        //marking of coordinates
-        visited
-        deadend
-        exit
-
-
-        find the start coordinate from the first line
-        find the exit coordinate from the last line
-
-        if no exit
-            return unsolvable cause of no exit
-
-        recursif
-
-        //cas de base
-        if current location == exit
-            return current location //found the exit
-            change affichage des cases visited
-
-        //autres cas
-
-        check down first
-        check right
-        check left
-        check up
-
-        if never went
-            mark current coordinate as visited
-            go to next coordinates
-
-        if wall or deadend
-            mark current coordinate as deadend
-            go back to last visited
-
-         */
-
-
-
-
-
-
-
-        int x=0;
-        int y=0;
-
-        int left = grille[x-1][y];
-
-
-        boolean trouve;
-        int deadend = -1;
-        boolean isValid = y >= 0 || y < grille.length || x >= 0 || x < grille[y].length; ;
-
-        if (y < 0 || y >= grille.length || x < 0 || x >= grille.length)
-
-
-
-        for (x=0;x< grille.length;x++){
-
-            for (y = 0; y< grille[x].length; y++)
-                if (grille[x][y] == 0){
-                    //TODO check if deadend, if so change value for deadend.
-                    if (grille[x][y] != left){
-
-                    }
-                }
+    public static void trouverDebutLabyrinthe(int[][] grille) {
+        //trouver le debut du labyrinthe. always start au top. premier row, trouver colonne
+        for (int i = 0; i < grille[debutRow].length; i++) {
+            if (grille[debutRow][i] == 0)
+                debutCol = i;
         }
+        //trouver la fin du labyrinthe. always end at last row. dernier row, trouver colonne
+        for (int i = 0; i < grille[finRow].length; i++) {
+            if (grille[finRow][i] == 0)
+                finCol = i;
+        }
+        row = debutRow;
+        col = debutCol;
+    }
 
-        return true;
+    public static boolean tryMove(int[][] lab, int nouveauRow, int nouveauCol) {
+        row += nouveauRow;
+        col += nouveauCol;
+
+        return resoudre(lab);
+    }
+
+    //resout le labyrinthe
+    public static boolean resoudre(int[][] grille) {
+
+
+        //recursif
+        //cas de base
+        if (row == finRow && col == finCol)
+            return true;
+        //check if not deadend
+        if (grille[row][col] == 2 || grille[row][col] == 1)
+            return false;
+        //mark as visited
+        grille[row][col] = visited;
+
+        //directions N-S-E-O
+        //check au dessus
+        if (row != 0 && grille[row - 1][col] == 0){
+            grille[row][col] = -1;
+            row -= 1;
+
+            if(resoudre(grille))
+                return true;
+            row += 1;
+        }
+        //check en bas
+        if (row != grille.length && grille[row + 1][col] == 0){
+            grille[row][col] = -1;
+            row += 1;
+
+            if(resoudre(grille))
+                return true;
+            row -= 1;
+        }
+        //check a droite
+        if (col != grille[0].length && grille[row][col + 1] == 0){
+            grille[row][col] = -1;
+            col += 1;
+
+            if(resoudre(grille))
+                return true;
+            col -= 1;
+        }
+        //check a gauche
+        if (col != 0 && grille[row][col - 1] == 0){
+            grille[row][col] = -1;
+            col -= 1;
+
+            if(resoudre(grille))
+                return true;
+            col += 1;
+        }
+        return false; // TODO must return true when met the exit
     }
 }
