@@ -7,7 +7,6 @@ class Main {
     public static void main(String[] args) {
         int[][] labyrinthe = charger("labyrinthe");
         Labyrinthe.afficher(labyrinthe);
-        Labyrinthe.trouverDebutLabyrinthe(labyrinthe);
         if (Labyrinthe.resoudre(labyrinthe)){
             System.out.println("Chemin trouvé!");
         } else {

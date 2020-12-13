@@ -1,13 +1,10 @@
-import java.util.Arrays;
 
 public class Labyrinthe{
 
-    private static int row;
-    private static int col;
     private static int debutRow = 0;
-    private static int debutCol;
+    private static int debutCol = 1;
     private static int finRow = 19;
-    private static int finCol;
+    private static int finCol = 18;
     private static int visited = 2;
 
 
@@ -31,83 +28,68 @@ public class Labyrinthe{
         System.out.println();
     }
 
-    public static void trouverDebutLabyrinthe(int[][] grille) {
-        //trouver le debut du labyrinthe. always start au top. premier row, trouver colonne
-        for (int i = 0; i < grille[debutRow].length; i++) {
-            if (grille[debutRow][i] == 0)
-                debutCol = i;
-        }
-        //trouver la fin du labyrinthe. always end at last row. dernier row, trouver colonne
-        for (int i = 0; i < grille[finRow].length; i++) {
-            if (grille[finRow][i] == 0)
-                finCol = i;
-        }
-        row = debutRow;
-        col = debutCol;
-    }
-
     //resout le labyrinthe
     public static boolean resoudre(int[][] grille) {
 
         //recursif
         //cas de base
-        if (row == finRow && col == finCol)
+        if (debutRow == finRow && debutCol == finCol)
             return true;
         //mark as visited
-        grille[row][col] = visited;
+        grille[debutRow][debutCol] = visited;
 
         //directions N-S-E-O
         //check au dessus
-        if (row != 0 && grille[row - 1][col] == 0){
-            grille[row][col] = -1;
-            row -= 1;
+        if (debutRow != 0 && grille[debutRow - 1][debutCol] == 0){
+            grille[debutRow][debutCol] = -1;
+            debutRow -= 1;
 
             if(resoudre(grille))
                 return true;
             else {
-                grille[row][col] = 2;
-                row += 1;
+                grille[debutRow][debutCol] = 2;
+                debutRow += 1;
             }
         }
         //check en bas
-        if (row != grille.length && grille[row + 1][col] == 0){
-            grille[row][col] = -1;
-            row += 1;
+        if (debutRow != grille.length && grille[debutRow + 1][debutCol] == 0){
+            grille[debutRow][debutCol] = -1;
+            debutRow += 1;
 
             if(resoudre(grille))
                 return true;
             else {
-                grille[row][col] = 2;
-                row -= 1;
+                grille[debutRow][debutCol] = 2;
+                debutRow -= 1;
             }
         }
         //check a droite
-        if (col != grille[0].length && grille[row][col + 1] == 0){
-            grille[row][col] = -1;
-            col += 1;
+        if (debutCol != grille[0].length && grille[debutRow][debutCol + 1] == 0){
+            grille[debutRow][debutCol] = -1;
+            debutCol += 1;
 
             if(resoudre(grille))
                 return true;
             else {
-                grille[row][col] = 2;
-                col -= 1;
+                grille[debutRow][debutCol] = 2;
+                debutCol -= 1;
             }
         }
         //check a gauche
-        if (col != 0 && grille[row][col - 1] == 0){
-            grille[row][col] = -1;
-            col -= 1;
+        if (debutCol != 0 && grille[debutRow][debutCol - 1] == 0){
+            grille[debutRow][debutCol] = -1;
+            debutCol -= 1;
 
             if(resoudre(grille)) {
-                grille[row][col] = -1;
+                grille[debutRow][debutCol] = -1;
                 return true;
             }
             else {
-                grille[row][col] = 2;
-                col += 1;
+                grille[debutRow][debutCol] = 2;
+                debutCol += 1;
             }
         }
-        grille[row][col] = 2;
+        grille[debutRow][debutCol] = 2;
         return false;
     }
 }
